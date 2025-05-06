@@ -102,7 +102,7 @@ exports.postCart = (req, res, next) => {
   //     });
   //   })
   //   .then(() => {
-  //     res.redirect('/cart');
+  //     res.redirect('/cart'); 
   //   })
   //   .catch(err => console.log(err));
 };
