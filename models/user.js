@@ -109,7 +109,8 @@ addToCart(product){
         throw err;
       });
   }
-  
+
+   
 
   // addOrder(){
   //   const db = getDb();
