@@ -83,6 +83,36 @@ addToCart(product){
   
   }
 
+
+  addOrder(){
+    const db = getDb();
+    this.getCart().then(products => {
+      const order = {
+    items: products,
+    user: {
+      _id: new ObjectId(this._id),
+      name:this.name
+    }
+  }
+  return db
+  .collection('orders')
+  .insertOne(this.cart)
+
+    })
+    return db
+    .collection('orders')
+    .insertOne(this.cart)
+    .then(() => {
+      this.cart = {items : [] };
+      return db
+    .collection('users')
+     .updateOne(
+    {_id:new ObjectId(this._id)},
+    {$set: {cart:{items: [] }}})
+    });
+   
+  }
+
 static findById(userId){
   const db = getDb();
   return db.collection('users')
