@@ -84,34 +84,61 @@ addToCart(product){
   }
 
 
-  addOrder(){
+  addOrder() {
     const db = getDb();
-    this.getCart().then(products => {
-      const order = {
-    items: products,
-    user: {
-      _id: new ObjectId(this._id),
-      name:this.name
-    }
+    return this.getCart()
+      .then(products => {
+        const order = {
+          items: products,
+          user: {
+            _id: new ObjectId(this._id),
+            name: this.username
+          }
+        };
+        return db.collection('orders').insertOne(order);
+      })
+      .then(result => {
+        this.cart = { items: [] };
+        return db.collection('users').updateOne(
+          { _id: new ObjectId(this._id) },
+          { $set: { cart: { items: [] } } }
+        );
+      })
+      .catch(err => {
+        console.error('Failed to place order:', err);
+        throw err;
+      });
   }
-  return db
-  .collection('orders')
-  .insertOne(this.cart)
+  
 
-    })
-    return db
-    .collection('orders')
-    .insertOne(this.cart)
-    .then(() => {
-      this.cart = {items : [] };
-      return db
-    .collection('users')
-     .updateOne(
-    {_id:new ObjectId(this._id)},
-    {$set: {cart:{items: [] }}})
-    });
+  // addOrder(){
+  //   const db = getDb();
+  //   return this.getCart()
+  //   .then(products => {
+  //     const order = {
+  //   items: products,
+  //   user: {
+  //     _id: new ObjectId(this._id),
+  //     name:this.name
+  //   }
+  // }
+  // return db
+  // .collection('orders')
+  // .insertOne(order)
+
+  //   })
+  //   .then(() => {
+  //     this.cart = {items : [] };
+  //     return db
+  //   .collection('users')
+  //    .updateOne(
+  //   {_id:new ObjectId(this._id)},
+  //   {$set: {cart:{items: [] }}})
+  //   });
    
-  }
+  // }
+
+
 
 static findById(userId){
   const db = getDb();
